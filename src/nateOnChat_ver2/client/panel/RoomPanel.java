@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -14,16 +15,17 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import lombok.Data;
-import nateOnChat_ver2.client.NateOnClient;
+import nateOnChat_ver2.client.LineClient;
 
 @Data
 public class RoomPanel extends JPanel implements ActionListener{
 
-	private NateOnClient mContext;
+	private LineClient mContext;
 
 	// 백그라운드 이미지
 	private Image backgroundImage;
@@ -49,7 +51,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 	private Vector<String> userIdVector = new Vector<>();
 	private Vector<String> roomNameVector = new Vector<>();
 
-	public RoomPanel(NateOnClient mContext) {
+	public RoomPanel(LineClient mContext) {
 		this.mContext = mContext;
 		initData();
 		setInitLayout();
@@ -57,7 +59,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 	}
 
 	private void initData() {
-		backgroundImage = new ImageIcon("img/clientNate.png").getImage();
+		backgroundImage = new ImageIcon("img/ClientRoom.png").getImage();
 
 		userListPanel = new JPanel();
 		roomListPanel = new JPanel();
@@ -77,41 +79,45 @@ public class RoomPanel extends JPanel implements ActionListener{
 		setLayout(null);
 
 		userListPanel.setBounds(20, 30, 120, 250);
-		userListPanel.setBackground(Color.LIGHT_GRAY);
-		userListPanel.setBorder(new TitledBorder(new LineBorder(Color.white, 3), "user"));
+		userListPanel.setBackground(new Color(255,255,235));
+		userListPanel.setBorder(new TitledBorder(new LineBorder(Color.lightGray, 3), "user"));
 		userList.setListData(userIdVector);
-		userList.setBackground(Color.LIGHT_GRAY);
+		userList.setBackground(new Color(255,255,235));
 		userListPanel.add(userList);
 		add(userListPanel);
 
 		roomListPanel.setBounds(145, 30, 300, 250);
-		roomListPanel.setBackground(Color.LIGHT_GRAY);
-		roomListPanel.setBorder(new TitledBorder(new LineBorder(Color.white, 3), "room"));
+		roomListPanel.setBackground(new Color(255,255,235));
+		roomListPanel.setBorder(new TitledBorder(new LineBorder(Color.lightGray, 3), "room"));
 		roomList.setListData(roomNameVector);
-		roomList.setBackground(Color.LIGHT_GRAY);
+		roomList.setBackground(new Color(255,255,235));
 		roomListPanel.add(roomList);
 		add(roomListPanel);
 
 		roomBtnPanel.setBounds(450, 160, 120, 120);
-		roomBtnPanel.setBackground(Color.lightGray);
-		roomBtnPanel.setBorder(new TitledBorder(new LineBorder(Color.white, 3)));
+		roomBtnPanel.setBackground(new Color(255,255,235));
+		roomBtnPanel.setBorder(new TitledBorder(new LineBorder(Color.lightGray, 3)));
 		roomBtnPanel.setLayout(null);
 
-		makeRoomBtn.setBackground(Color.LIGHT_GRAY);
+		makeRoomBtn.setBackground(new Color(255,255,205));
 		makeRoomBtn.setBounds(10, 10, 100, 20);
+		makeRoomBtn.setBorder(new LineBorder(Color.lightGray, 2));
 		makeRoomBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
 
-		enterRoomBtn.setBackground(Color.LIGHT_GRAY);
+		enterRoomBtn.setBackground(new Color(255,255,205));
 		enterRoomBtn.setBounds(10, 37, 100, 20);
+		enterRoomBtn.setBorder(new LineBorder(Color.lightGray, 2));
 		enterRoomBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
 		
-		outRoomBtn.setBackground(Color.LIGHT_GRAY);
+		outRoomBtn.setBackground(new Color(255,255,205));
 		outRoomBtn.setBounds(10, 64, 100, 20);
+		outRoomBtn.setBorder(new LineBorder(Color.lightGray, 2));
 		outRoomBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
 		outRoomBtn.setEnabled(false);
 
 		secretMsgBtn.setBounds(10, 91, 100, 20);
-		secretMsgBtn.setBackground(Color.LIGHT_GRAY);
+		secretMsgBtn.setBackground(new Color(255,255,205));
+		secretMsgBtn.setBorder(new LineBorder(Color.lightGray, 2));
 		secretMsgBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
 
 		roomBtnPanel.add(makeRoomBtn);

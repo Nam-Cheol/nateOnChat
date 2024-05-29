@@ -2,8 +2,6 @@ package nateOnChat_ver2.client;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -28,10 +26,10 @@ import lombok.Data;
 import nateOnChat_ver2.interfaces.ProtocolImpl;
 
 @Data
-public class NateOnClient implements ProtocolImpl {
+public class LineClient implements ProtocolImpl {
 
 	// 프레임 창
-	private NateOnClientFrame clientFrame;
+	private LineClientFrame clientFrame;
 
 	// 소켓 장치
 	private Socket socket;
@@ -51,6 +49,7 @@ public class NateOnClient implements ProtocolImpl {
 	private String from;
 	private String message;
 	private String imagePath;
+	private String roomImagePath;
 
 	// TODO 클라이언트로 가져오기 위한 변수
 
@@ -77,9 +76,11 @@ public class NateOnClient implements ProtocolImpl {
 
 	// 사진 저장을 위한 이미지
 	private Image image;
+	private Image roomImage;
+	private String name;
 
-	public NateOnClient() {
-		clientFrame = new NateOnClientFrame(this);
+	public LineClient() {
+		clientFrame = new LineClientFrame(this);
 
 		userList = clientFrame.getRoomPanel().getUserList();
 		userIdList = clientFrame.getRoomPanel().getUserIdVector();
@@ -254,7 +255,7 @@ public class NateOnClient implements ProtocolImpl {
 
 			// 내가 보낸 파일이 아닐 때 load 한다.
 			if (!from.equals(id)) {
-
+				name = from;
 				downloadImgBtn.setEnabled(true);
 
 				// 토크나이저를 /를 사용했기 때문에 가공하는 작업이 여러 번 필요하다.
@@ -270,17 +271,18 @@ public class NateOnClient implements ProtocolImpl {
 			}
 
 		} else if (protocol.equals("RoomImageDownload")) {
-			if (!from.equals(id)) {
-
+			String name = tokenizer.nextToken();
+			if (!name.equals(id)) {
+				this.name = name;
 				roomDownloadImgBtn.setEnabled(true);
 
 				// 토크나이저를 /를 사용했기 때문에 가공하는 작업이 여러 번 필요하다.
 				String temp = tokenizer.nextToken();
 				String downloadImage = temp.replaceAll("홇", "/");
-				imagePath = downloadImage.replaceFirst("//https:/", "https://");
+				roomImagePath = downloadImage.replaceFirst("//https:/", "https://");
 
 				try {
-					image = ImageIO.read(new URL(imagePath.trim()));
+					roomImage = ImageIO.read(new URL(roomImagePath.trim()));
 				} catch (MalformedURLException e) {
 				} catch (IOException e) {
 				}
@@ -319,13 +321,37 @@ public class NateOnClient implements ProtocolImpl {
 	}
 	
 	public void sendRoomImageUploadBtn(String imgPath) {
-		writer("RoomImageUpload/" + myRoomName + "/" + imgPath);
+		writer("RoomImageUpload/" + myRoomName + "/" + id + "/" + imgPath);
 	}
+	
+	
+	// TODO 미완 코드 문제점 -> 이미지 load 문제인지 frame 이 나타나지 않음.
+//	public void loadImage(String name, JButton downloadImgBtn, StringTokenizer tokenizer, String imagePath, Image image) {
+//		
+//		// 내가 보낸 파일이 아닐 때 load 한다.
+//		if (!name.equals(id)) {
+//
+//			downloadImgBtn.setEnabled(true);
+//
+//			// 토크나이저를 /를 사용했기 때문에 가공하는 작업이 여러 번 필요하다.
+//			String temp = tokenizer.nextToken();
+//			String downloadImage = temp.replaceAll("홇", "/");
+//			imagePath = downloadImage.replaceFirst("//https:/", "https://");
+//
+//			try {
+//				image = ImageIO.read(new URL(imagePath.trim()));
+//			} catch (MalformedURLException e) {
+//			} catch (IOException e) {
+//			}
+//		}
+//		
+//	}
 
-	public void viewImage(JButton downloadBtn) {
+	public void viewImage(JButton downloadBtn, Image image) {
+		
 		if (image != null) {
 
-			JFrame frame = new JFrame("Downloaded Image");
+			JFrame frame = new JFrame(name + "님이 보낸 사진");
 
 			// 사진의 크기만큼 사이즈를 정하자.
 			frame.setSize(image.getWidth(null), image.getHeight(null));
@@ -348,12 +374,16 @@ public class NateOnClient implements ProtocolImpl {
 			frame.setVisible(true);
 
 			// 프레임을 닫았을 때 이미지가 없어지도록 하자
-			frame.addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowClosing(WindowEvent windowEvent) {
-					image = null;
-				}
-			});
+			// TODO 닫았을 때 들어온 이미지를 null 값으로 바꾸려면 클래스 파일을 만드는 것이 필요해 보임.
+//			frame.addWindowListener(new WindowAdapter() {
+//				@Override
+//				public void windowClosing(WindowEvent windowEvent) {
+//					
+//					image = null;
+//					
+//				}
+//			});
+			
 		}
 		downloadBtn.setEnabled(false);
 	}
@@ -431,7 +461,7 @@ public class NateOnClient implements ProtocolImpl {
 	}
 
 	public static void main(String[] args) {
-		new NateOnClient();
+		new LineClient();
 	}
 
 }

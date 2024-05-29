@@ -20,12 +20,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import lombok.Data;
-import nateOnChat_ver2.client.NateOnClient;
+import nateOnChat_ver2.client.LineClient;
 
 @Data
 public class WaitingMsgPanel extends JPanel {
 
-	private NateOnClient mContext;
+	private LineClient mContext;
 
 	// 백그라운드 이미지
 	private Image backgroundImage;
@@ -53,7 +53,7 @@ public class WaitingMsgPanel extends JPanel {
 	// 메세지를 담는 변수
 	String message;
 
-	public WaitingMsgPanel(NateOnClient mContext) {
+	public WaitingMsgPanel(LineClient mContext) {
 		this.mContext = mContext;
 		initData();
 		setInitLayout();
@@ -61,7 +61,7 @@ public class WaitingMsgPanel extends JPanel {
 	}
 
 	private void initData() {
-		backgroundImage = new ImageIcon("img/clientNate.png").getImage();
+		backgroundImage = new ImageIcon("img/ClientWaiting.png").getImage();
 		backgroundPanel = new JPanel();
 
 		mainPanel = new JPanel();
@@ -73,7 +73,7 @@ public class WaitingMsgPanel extends JPanel {
 		mainMessageBox = new JTextArea();
 		writeMessageBox = new JTextField(17);
 		
-		sendMessageBtn = new JButton();
+		sendMessageBtn = new JButton(new ImageIcon("img/SendBtn.png"));
 		
 		downloadImgBtn = new JButton(new ImageIcon("img/download.png"));
 		uploadImgBtn = new JButton(new ImageIcon("img/upload.png"));
@@ -89,23 +89,23 @@ public class WaitingMsgPanel extends JPanel {
 
 		mainPanel.setBounds(30, 20, 400, 250);
 		mainPanel.setLayout(null);
-		mainPanel.setBackground(Color.LIGHT_GRAY);
-		mainPanel.setBorder(new TitledBorder(new LineBorder(Color.white, 3), "Message"));
+		mainPanel.setBackground(new Color(255,255,235));
+		mainPanel.setBorder(new TitledBorder(new LineBorder(Color.lightGray, 3), "Message"));
 		mainPanel.add(scrollPane);
 		scrollPane.setBounds(8, 15, 383, 225);
 		scrollPane.add(mainMessageBox);
 		mainMessageBox.setFocusable(false);
+		mainMessageBox.setBackground(new Color(255,255,235));
 		add(mainPanel);
 
 		sendMessageBtn.setBackground(Color.lightGray);
 		sendMessageBtn.setSize(60, 30);
 		sendMessageBtn.setLocation(340, 0);
-		sendMessageBtn.setText("전송");
-		sendMessageBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+		sendMessageBtn.setBorderPainted(false);
 		sendMessageBtn.setEnabled(false);
 		
 		writeMessageBox.setSize(340, 30);
-		writeMessageBox.setBackground(Color.white);
+		writeMessageBox.setBackground(new Color(255,255,235));
 		
 		bottomPanel.setBounds(30, 270, 400, 30);
 		bottomPanel.setLayout(null);
@@ -118,16 +118,19 @@ public class WaitingMsgPanel extends JPanel {
 		downloadImgBtn.setBackground(Color.LIGHT_GRAY);
 		downloadImgBtn.setSize(42, 32);
 		downloadImgBtn.setLocation(0, 0);
+		downloadImgBtn.setOpaque(false);
 		downloadImgBtn.setBorderPainted(false);
 		downloadImgBtn.setEnabled(false);
 		
 		uploadImgBtn.setBackground(Color.LIGHT_GRAY);
 		uploadImgBtn.setSize(42, 32);
-		uploadImgBtn.setLocation(43, 0);
+		uploadImgBtn.setLocation(0, 33);
+		uploadImgBtn.setOpaque(false);
 		uploadImgBtn.setBorderPainted(false);
 		
-		imgPanel.setBounds(435, 30, 84, 32);
+		imgPanel.setBounds(430, 30, 42, 66);
 		imgPanel.setLayout(null);
+		imgPanel.setOpaque(false);
 		imgPanel.add(downloadImgBtn);
 		imgPanel.add(uploadImgBtn);
 		add(imgPanel);
@@ -156,7 +159,8 @@ public class WaitingMsgPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(downloadImgBtn.isEnabled()) {
-					mContext.viewImage(downloadImgBtn);
+					mContext.viewImage(downloadImgBtn, mContext.getImage());
+					System.out.println("됨?");
 				}
 			}
 		});

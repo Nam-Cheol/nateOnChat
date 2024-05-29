@@ -17,13 +17,12 @@ import lombok.Data;
 import nateOnChat_ver2.interfaces.ProtocolImpl;
 
 @Data
-public class NateOnServer {
+public class LineServer {
 
 	// TODO 이름 중복 시 생성 안돼야함.
 	// TODO 같은 방 생성 이후 방 생성 안됨
-	// TODO 방 내에서 사진을 보낼 때 나도 포함이 됨 --> 나에 대한 정보를 식별해야됨.
 
-	private NateOnServerFrame frame;
+	private LineServerFrame frame;
 
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -46,8 +45,8 @@ public class NateOnServer {
 	private String from;
 	private String message;
 
-	public NateOnServer() {
-		frame = new NateOnServerFrame(this);
+	public LineServer() {
+		frame = new LineServerFrame(this);
 		roomCheck = true;
 		serverInfo = frame.getServerInfo();
 	}
@@ -56,7 +55,7 @@ public class NateOnServer {
 		try {
 			int portNum = Integer.parseInt(frame.getPortNum().getText().trim());
 			serverSocket = new ServerSocket(portNum);
-			serverInfoWriter(portNum + "포트 서버 시작");
+			serverInfoWriter("[" + portNum + "] 포트 서버 시작");
 			connectClient();
 		} catch (IOException e) {
 		}
@@ -80,10 +79,10 @@ public class NateOnServer {
 						// 연결을 대기 하다가 유저가 들어오면 유저 생성, 소켓으로 유저 구분 가능.
 						ConnectedUser user = new ConnectedUser(socket);
 						user.start();
-						
+
 					} catch (IOException e) {
 						// 서버 중지
-						serverInfoWriter(frame.getPortNum().getText() + "번호 서버가 종료되었습니다.");
+						serverInfoWriter("[" + frame.getPortNum().getText() + "] 번호 서버 종료");
 						break;
 
 					}
@@ -125,7 +124,7 @@ public class NateOnServer {
 		private void sendInfomation() {
 			try {
 				id = reader.readLine();
-				serverInfoWriter("[알림] " + id + "님이 접속하였습니다.");
+				serverInfoWriter("[알림] '" + id + "'님이 접속하였습니다.");
 
 				// 접속된 유저들에게 유저 명단 업데이트를 위한 출력
 				newUser();
@@ -174,37 +173,43 @@ public class NateOnServer {
 			from = tokenizer.nextToken();
 
 			if (protocol.equals("PublicMsg")) {
-				
+
 				message = tokenizer.nextToken();
+				serverInfoWriter("[대기실] " + id + " ▷ " + message);
 				broadCast(protocol + "/" + from + "/" + message);
 
 			} else if (protocol.equals("SecretMsg")) {
 				message = tokenizer.nextToken();
 				secretMessage();
+				
 			} else if (protocol.equals("MakeRoom")) {
 				makeRoom();
+				
 			} else if (protocol.equals("OutRoom")) {
 				outRoom();
+				
 			} else if (protocol.equals("EnterRoom")) {
 				enterRoom();
+				
 			} else if (protocol.equals("RoomChat")) {
 				message = tokenizer.nextToken();
+				serverInfoWriter("[" + from + "] 방 " + id + " ▷ " + message);
 				chatting(null, "RoomChat/" + id + "/" + message);
-			} else if (protocol.equals("ImageUpload")) {
 				
+			} else if (protocol.equals("ImageUpload")) {
 				String imgPath = "홇";
-				while(tokenizer.hasMoreTokens()) {
+				while (tokenizer.hasMoreTokens()) {
 					imgPath += "홇" + tokenizer.nextToken();
 				}
 				broadCast("ImageDownload/" + from + "/" + imgPath);
-				
-			} else if(protocol.equals("RoomImageUpload")) {
+
+			} else if (protocol.equals("RoomImageUpload")) {
+				String name = tokenizer.nextToken();
 				String imgPath = "홇";
-				while(tokenizer.hasMoreTokens()) {
+				while (tokenizer.hasMoreTokens()) {
 					imgPath += "홇" + tokenizer.nextToken();
 				}
-				message = "사진을 보냈습니다.";
-				chatting(null, "RoomImageDownload/" + from + "/" + imgPath);
+				chatting(null, "RoomImageDownload/" + from + "/" + name + "/" + imgPath);
 			}
 
 		}
@@ -217,11 +222,10 @@ public class NateOnServer {
 				JOptionPane.showMessageDialog(null, "서버 출력 에러 !", "알림", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		
+
 		// 프로토콜별 가공하는 메소드
 		@Override
 		public void chatting(JTextArea messageBox, String str) {
-			serverInfoWriter("[메세지] " + from + "_" + message);
 
 			for (int i = 0; i < madeRooms.size(); i++) {
 				MyRoom myRoom = madeRooms.elementAt(i);
@@ -261,7 +265,7 @@ public class NateOnServer {
 				myRoomName = from;
 				MyRoom myRoom = new MyRoom(from, this);
 				madeRooms.add(myRoom);
-				serverInfoWriter("[방 생성]" + id + "_" + from);
+				serverInfoWriter("[방 생성] '" + id + "'님이 [" + from + "] 방을 개설하였습니다.");
 
 				newRoom();
 				writer("MakeRoom/" + from);
@@ -288,7 +292,7 @@ public class NateOnServer {
 
 				if (myRoom.roomName.equals(from)) {
 					myRoomName = null;
-					serverInfoWriter("[방 퇴장]" + id + "_" + from);
+					serverInfoWriter("[방 퇴장] '" + id + "'님이 [" + from + "] 방을 나갔습니다.");
 					myRoom.removeRoom(this);
 					writer("OutRoom/" + from);
 				}
@@ -305,7 +309,7 @@ public class NateOnServer {
 					myRoomName = from;
 					myRoom.addUser(this);
 					myRoom.upDataRoomUserList("RoomList/");
-					serverInfoWriter("[입장]" + from + " 방_" + id);
+					serverInfoWriter("[" + from + "] 방에 '" + id + "'님 입장");
 					writer("EnterRoom/" + from);
 				}
 			}
@@ -386,7 +390,7 @@ public class NateOnServer {
 
 					if (myRoom.roomName.equals(roomName)) {
 						madeRooms.remove(this);
-						serverInfoWriter("[방 삭제]" + user.id + "_" + from);
+						serverInfoWriter("[" + from + "] 방 삭제 _" + user.id);
 						roomBroadCast("OutRoom/" + from);
 						for (int j = 0; j < connectedUsers.size(); j++) {
 							connectedUsers.get(j).writer("RemoveRoom/" + from);
@@ -399,6 +403,6 @@ public class NateOnServer {
 	}
 
 	public static void main(String[] args) {
-		new NateOnServer();
+		new LineServer();
 	}
 }

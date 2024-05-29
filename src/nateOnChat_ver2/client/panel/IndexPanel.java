@@ -19,15 +19,15 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import lombok.Data;
-import nateOnChat_ver2.client.NateOnClient;
-import nateOnChat_ver2.client.NateOnClientFrame;
+import nateOnChat_ver2.client.LineClient;
+import nateOnChat_ver2.client.LineClientFrame;
 
 @Data
 public class IndexPanel extends JPanel {
 
-	private NateOnClient mContext;
+	private LineClient mContext;
 
-	private NateOnClientFrame frame;
+	private LineClientFrame frame;
 
 	// 백그라운드 이미지
 	private Image backgroundImage;
@@ -54,7 +54,7 @@ public class IndexPanel extends JPanel {
 	// 로그인 버튼
 	private JButton loginBtn;
 	
-	public IndexPanel(NateOnClient mContext, NateOnClientFrame frame) {
+	public IndexPanel(LineClient mContext, LineClientFrame frame) {
 		this.mContext = mContext;
 		this.frame = frame;
 		initData();
@@ -63,7 +63,7 @@ public class IndexPanel extends JPanel {
 	}
 
 	private void initData() {
-		backgroundImage = new ImageIcon("img/clientNate.png").getImage();
+		backgroundImage = new ImageIcon("img/ClientLogin.png").getImage();
 		backgroundPanel = new JPanel();
 
 		borderPanel = new JPanel();
@@ -87,8 +87,8 @@ public class IndexPanel extends JPanel {
 		loginBtn = new JButton("Login");
 
 		// 실행 확인을 위한 세팅
-		inputIp.setText("localhost");
-		inputPort.setText("50000");
+//		inputIp.setText("localhost");
+//		inputPort.setText("50000");
 	}
 
 	private void setInitLayout() {
@@ -99,10 +99,10 @@ public class IndexPanel extends JPanel {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		borderPanel.setBounds(140, 60, 300, 200);
+		borderPanel.setBounds(140, 90, 300, 200);
 		borderPanel.setLayout(null);
-		borderPanel.setBackground(Color.LIGHT_GRAY);
-		borderPanel.setBorder(new TitledBorder(new LineBorder(Color.white, 3), "Login"));
+		borderPanel.setBackground(new Color(255,255,235));
+		borderPanel.setBorder(new TitledBorder(new LineBorder(Color.LIGHT_GRAY, 3), "Login"));
 		add(borderPanel);
 
 		// IP 컴포넌트
@@ -242,6 +242,6 @@ public class IndexPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(backgroundImage, 0, 0, getWidth() - 10, getHeight() - 10, null);
+		g.drawImage(backgroundImage, 0, 0, getWidth()-10, getHeight()-10, null);
 	}
 }

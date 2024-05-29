@@ -1,5 +1,6 @@
 package nateOnChat_ver2.server;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
@@ -16,9 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class NateOnServerFrame extends JFrame implements ActionListener {
+public class LineServerFrame extends JFrame implements ActionListener {
 
-	private NateOnServer mContext;
+	private LineServer mContext;
 	
 	private JLabel backgroundMap;
 	
@@ -34,7 +35,7 @@ public class NateOnServerFrame extends JFrame implements ActionListener {
 	
 	String info = null;
 
-	public NateOnServerFrame(NateOnServer mContext) {
+	public LineServerFrame(LineServer mContext) {
 		this.mContext = mContext;
 		initData();
 		setInitLayout();
@@ -43,41 +44,47 @@ public class NateOnServerFrame extends JFrame implements ActionListener {
 
 	public void initData() {
 		
-		backgroundMap = new JLabel(new ImageIcon("img/nate.png"));
+		backgroundMap = new JLabel(new ImageIcon("img/LineServer.gif"));
 		serverInfo = new JTextArea();
 		portNum = new JTextField(5);
-		startButton = new JButton("서버 실행");
-		closeButton = new JButton("서버 종료");
+		startButton = new JButton(new ImageIcon("img/ServerStart.png"));
+		closeButton = new JButton(new ImageIcon("img/ServerEnd.png"));
 		text = new JLabel();
 		pane = new ScrollPane();
 		
-		setTitle("NateOn Server Management");
+		setTitle("Line Server Management");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(backgroundMap);
 		setSize(400, 740);
 
 		serverInfo.setSize(280, 350);
 		serverInfo.setFocusable(false);
-		pane.setBounds(50, 100, 280, 350);
+		serverInfo.setBackground(new Color(255,255,235));
+		pane.setBounds(52, 150, 280, 320);
 		pane.add(serverInfo);
 		
 		portNum.setSize(100, 20);
-		portNum.setLocation(180, 540);
+		portNum.setBackground(new Color(255,255,235));
+		portNum.setLocation(146, 500);
 
 		startButton.setSize(100, 50);
-		startButton.setLocation(80, 600);
+		startButton.setLocation(75, 550);
 		startButton.setEnabled(false);
+		startButton.setBorderPainted(false);
+		startButton.setContentAreaFilled(false);
 
-		closeButton.setLocation(200, 600);
 		closeButton.setSize(100, 50);
+		closeButton.setLocation(210, 550);
+		closeButton.setBorderPainted(false);
+		closeButton.setContentAreaFilled(false);
 
-		text.setLocation(80, 500);
+		text.setLocation(155, 440);
 		text.setSize(150, 100);
-		text.setFont(new Font("궁서체", Font.BOLD, 13));
-		text.setText("PORT NUMBER : ");
+		text.setFont(new Font("굴림체", Font.BOLD, 13));
+		text.setText("PORT NUMBER");
 		
 		// 실행 확인을 위한 세팅
-		portNum.setText("50000");
+//		portNum.setText("50000");
 
 	}
 

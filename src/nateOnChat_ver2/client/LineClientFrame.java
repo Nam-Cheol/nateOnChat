@@ -1,5 +1,7 @@
 package nateOnChat_ver2.client;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -10,9 +12,9 @@ import nateOnChat_ver2.client.panel.RoomMessagePanel;
 import nateOnChat_ver2.client.panel.RoomPanel;
 import nateOnChat_ver2.client.panel.WaitingMsgPanel;
 
-public class NateOnClientFrame extends JFrame {
+public class LineClientFrame extends JFrame {
 	
-	private NateOnClient mContext;
+	private LineClient mContext;
 
 	private JPanel background;
 	
@@ -31,7 +33,7 @@ public class NateOnClientFrame extends JFrame {
 	// 방 대화 창
 	private RoomMessagePanel roomMsgPanel;
 	
-	public NateOnClientFrame(NateOnClient mContext) {
+	public LineClientFrame(LineClient mContext) {
 		this.mContext = mContext;
 		initData();
 		setInitLayout();
@@ -49,16 +51,18 @@ public class NateOnClientFrame extends JFrame {
 	
 	private void setInitLayout() {
 		
-		setTitle("네이트온에 오신 걸 환영합니다.");
+		setTitle("Line에 오신 걸 환영합니다.");
 		setSize(600, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		background.setBorder(new EmptyBorder(5,5,5,5));
 		background.setLayout(null);
+		background.setBackground(new Color(255,255,235));
 		setContentPane(background);
 		
 		tabPane.setBounds(0, 0, getWidth(), getHeight());
+		tabPane.setBackground(new Color(255, 255, 235));
 		background.add(tabPane);
 		
 		tabPane.addTab("로그인", null, indexPanel, null);
@@ -76,7 +80,7 @@ public class NateOnClientFrame extends JFrame {
 		setVisible(true);
 
 	}
-
+	
 	public IndexPanel getIndexPanel() {
 		return indexPanel;
 	}

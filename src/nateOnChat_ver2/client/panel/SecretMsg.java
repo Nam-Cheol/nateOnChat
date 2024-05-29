@@ -18,11 +18,11 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import nateOnChat_ver2.client.NateOnClient;
+import nateOnChat_ver2.client.LineClient;
 
 public class SecretMsg extends JPanel {
 
-	private NateOnClient mContext;
+	private LineClient mContext;
 
 	// 백그라운드 이미지
 	private Image backgroundImage;
@@ -45,7 +45,7 @@ public class SecretMsg extends JPanel {
 	// 메세지를 담는 변수
 	String message;
 
-	public SecretMsg(NateOnClient mContext) {
+	public SecretMsg(LineClient mContext) {
 		this.mContext = mContext;
 		initData();
 		setInitLayout();
@@ -53,7 +53,7 @@ public class SecretMsg extends JPanel {
 	}
 
 	private void initData() {
-		backgroundImage = new ImageIcon("img/clientNate.png").getImage();
+		backgroundImage = new ImageIcon("img/ClientRoom.png").getImage();
 		backgroundPanel = new JPanel();
 
 		mainPanel = new JPanel();
@@ -133,7 +133,7 @@ public class SecretMsg extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(backgroundImage, 0, 0, getWidth() - 10, getHeight() - 10, null);
+		g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 	}
 
 	public void sendRule() {
